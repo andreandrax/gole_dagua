@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:gole_dagua/congratulations_page.dart';
 
 class Increment200Page extends StatefulWidget {
   const Increment200Page({super.key});
@@ -11,14 +12,18 @@ class Increment200Page extends StatefulWidget {
 
 class _Increment200PageState extends State<Increment200Page> {
   int _counter = 0;
-
+  
   final AudioPlayer _audioPlayer = AudioPlayer();
 
  void _incrementBy200() async {
     setState(() {
       _counter += 200;
     });
-    if (_counter == 2000) {
+    if (_counter >= 2000) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const CongratulationsPage()),
+      );
       await _audioPlayer.play(AssetSource('audio/toque.mp3')); // Caminho do áudio na pasta assets
     }
   }
