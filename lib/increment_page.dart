@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'alert_reminder.dart';
 import 'congrats_page.dart';
-import 'custom_drawer.dart'; // Importa a aba lateral (custom_drawer)
-import 'alert_reminder.dart'; // Importa o lembrete de alerta
 
 class Increment200Page extends StatefulWidget {
   const Increment200Page({super.key});
@@ -14,43 +14,15 @@ class Increment200Page extends StatefulWidget {
 class _Increment200PageState extends State<Increment200Page> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); //controla a abertura da aba lateral
   int _counter = 0;
-  int _meta = 2000; // Valor inicial da meta
-  final TextEditingController _metaController = TextEditingController();
-  List<Map<String, String>> _registros = []; //lista de registro onde terá data e intervalo
-  DateTime? _ultimaMeta; // Para calcular o intervalo
 
-  @override
-  void initState() {
-    super.initState();
-    _metaController.text = _meta.toString();
-    AlertReminder.startHourlyAlert(context);
-  }
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
-  void _incrementBy200() {
+ void _incrementBy200() async {
     setState(() {
       _counter += 200;
     });
-    if (_counter >= _meta) { //condição acionada quando atingir a meta
-      final agora = DateTime.now(); //adição dos resgistros na lista
-    String intervalo = '';
-    if (_ultimaMeta != null) {
-      final diff = agora.difference(_ultimaMeta!);
-      intervalo = '${diff.inHours}h ${diff.inMinutes % 60}min';
-    } else {
-      intervalo = '-';
-    }
-    _ultimaMeta = agora;
-    _registros.insert(0, {
-      'data': '${agora.day}/${agora.month}/${agora.year} ${agora.hour}:${agora.minute.toString().padLeft(2, '0')}',
-      'intervalo': intervalo,
-    });
-    if (_registros.length > 7) {
-      _registros = _registros.sublist(0, 7);
-    }
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const CongratsPage()), //chama a pág. de congrat após atingir a meta
-      );
+    if (_counter == 2000) {
+      await _audioPlayer.play(AssetSource('audio/toque.mp3')); // Caminho do áudio na pasta assets
     }
   }
 
